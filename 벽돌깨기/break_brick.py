@@ -1,10 +1,10 @@
-import sys
+# import sys
 import itertools
 import copy
 from collections import deque
 
 # 로컬에서 input파일로 테스트가 필요할 때 밑의 주석을 제거하고 테스트
-sys.stdin = open("input.txt", "r")
+# sys.stdin = open("input.txt", "r")
 delta = [(0,-1), (0,1), (1,0), (-1,0)]
 
 def get_permutations(N, W):
