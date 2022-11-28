@@ -8,29 +8,25 @@ def is_possible(line):
     if len(set(line)) == 1:
         return True
 
-    check = False
     cnt = 1
     for i in range(1, N):
         if line[i-1] == line[i]:
             cnt += 1
-        else:
-            if check:
-                if cnt < X:
-                    return False
-                check = False
-                cnt -= X
-            if line[i-1] - line[i] == 1:
-                check = True
-                cnt = 1
-            elif line[i] - line[i-1] == 1: # line[i-1] < line[i]
-                if cnt < X:
-                    return False
-                cnt = 1
-            else:
+        elif line[i-1] - line[i] == 1:
+            if cnt < 0:
                 return False
-    if check and cnt < X:
-        return False
-    return True
+            cnt = -X + 1
+        elif line[i] - line[i-1] == 1:
+            if cnt < X:
+                return False
+            cnt = 1
+        else:
+            return False
+
+    if cnt >= 0:
+        return True
+    return False
+
 
 for test_case in range(1, T + 1):
     N, X = map(int, input().split())
