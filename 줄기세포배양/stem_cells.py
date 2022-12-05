@@ -37,7 +37,6 @@ def update_grid():
     for cell_pos in inactive_keys:
         if inactive_cells[cell_pos][1] == 0:
             reproduce_targets.append(cell_pos)
-    for cell_pos in inactive_keys:
         if inactive_cells[cell_pos][1] > 0:
             inactive_cells[cell_pos][1] -= 1
     # reproduce
@@ -45,7 +44,7 @@ def update_grid():
         reproduce(target)
         inactive_cells.pop(target)
 
-    # 수명이 0인 cell들 inactive cells에 추가
+    # 수명이 0인 cell들 active cells에 추가
     inactive_keys = list(inactive_cells.keys())
     for cell_pos in inactive_keys:
         if inactive_cells[cell_pos][1] == 0:
@@ -55,7 +54,7 @@ def update_grid():
 def reproduce(cell_pos):
     for i in range(len(delta)):
         new_cellx, new_celly = cell_pos[0] + delta[i][0], cell_pos[1] + delta[i][1]
-        if new_cellx >= 0 and new_cellx < len(grid) and new_celly >= 0 and new_celly < len(grid[0]) and grid[new_cellx][new_celly] > -1:
+        if grid[new_cellx][new_celly] == 0 or (grid[new_cellx][new_celly] > 0 and inactive_cells[cell_pos][0] == inactive_cells[cell_pos][1]):
             grid[new_cellx][new_celly] = max(grid[new_cellx][new_celly], inactive_cells[cell_pos][0])
             inactive_cells[(new_cellx, new_celly)] = [grid[new_cellx][new_celly], grid[new_cellx][new_celly]]
 
@@ -75,8 +74,6 @@ for test_case in range(1, T + 1):
     
     for i in range(1, K+1):
         update_grid()
-        print(i, inactive_cells)
-        print(active_cells)
     
     cnt = len(active_cells) + len(inactive_cells)
 
