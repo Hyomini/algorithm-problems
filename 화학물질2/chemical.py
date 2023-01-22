@@ -1,7 +1,7 @@
-import sys
-from collections import Counter
+# import sys
 
-sys.stdin = open("input.txt", "r")
+# sys.stdin = open("input.txt", "r")
+MAX_VALUE = 100000
 
 
 def get_square(posx, posy):
@@ -49,8 +49,21 @@ def get_order(squares, cnt):
             if i not in orders and squares[i][0] == num:
                 orders.append(i)
                 stack.append(squares[i][1])
-    print(orders)
 
+    return orders
+
+def memo(dets, square_cnt):
+    M = [[0] * (square_cnt + 1) for _ in range(square_cnt + 1)]
+    for l in range(0, square_cnt):
+        for i in range(1, square_cnt - l + 1):
+            j = i + l
+            if i == j:
+                M[i][j] = 0
+                continue
+            M[i][j] = MAX_VALUE
+            for k in range(i, j):
+                M[i][j] = min(M[i][j], M[i][k] + M[k+1][j] + dets[i-1]*dets[k]*dets[j])
+    return M
 
 T = int(input())
 for test_case in range(1, T + 1):
@@ -58,6 +71,7 @@ for test_case in range(1, T + 1):
     board = [list(map(int, input().split())) for _ in range(N)]
     visited = [[0] * N for _ in range(N)]
     squares = dict()
+    dets = list()
 
     square_cnt = 0
     for i in range(N):
@@ -66,6 +80,14 @@ for test_case in range(1, T + 1):
                 lenx, leny = get_square(i, j)
                 squares[square_cnt] = [lenx, leny]
                 square_cnt += 1
-    get_order(squares, square_cnt)
-    
-    print(f"#{test_case} {squares}")
+
+    orders = get_order(squares, square_cnt)
+
+    for idx, order in enumerate(orders):
+        if idx == 0:
+            dets.append(squares[order][0])
+            dets.append(squares[order][1])
+        else:
+            dets.append(squares[order][1])
+    M = memo(dets, square_cnt)
+    print(f"#{test_case} {M[1][square_cnt]}")
